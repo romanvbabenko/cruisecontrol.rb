@@ -13,6 +13,9 @@ gem "jquery-rails", '1.0.9'
 gem "abstract", "1.0.0"
 
 group :development do
+  gem "rspec-rails", "~> 2.6.1"
+  gem "shoulda", "~> 2.11.3"
+
   gem "rcov", '0.9.9'
   gem "mocha", "0.9.12", :require => false
   gem "rack-test", :require => "rack/test"
