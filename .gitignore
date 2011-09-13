@@ -1,3 +1,7 @@
+.*
+!.gitignore
+!.gitkeeper
+!*.example
 *~
 coverage
 __sandbox
