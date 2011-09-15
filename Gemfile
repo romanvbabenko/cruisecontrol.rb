@@ -17,6 +17,10 @@ group :development do
   gem "rspec-rails", "~> 2.6.1"
   gem "shoulda", "~> 2.11.3"
 
+  gem "rails-footnotes", ">= 3.7.5.rc4"
+  gem "colorize"
+
+  #TODO ???
   gem "rcov", '0.9.9'
   gem "mocha", "0.9.12", :require => false
   gem "rack-test", :require => "rack/test"
