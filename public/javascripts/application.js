@@ -1,14 +1,24 @@
 // Place your application-specific JavaScript functions and classes here
 // This file is automatically included by javascript_include_tag :defaults
 
+// TimeZone support
+function setTimezoneCookie() {
+  var offset = (new Date()).getTimezoneOffset()
+  var date = new Date();
+  date.setTime(date.getTime()+3600000);
+  document.cookie = "utc_offset="+offset+"; expires="+date.toGMTString();+"; path=/";
+}
+
 $(document).ready(function() {
+  setTimezoneCookie();
+
   $("#projects .buttons .build_button").live("click", function(e) {
     e.preventDefault();
     var button = $(this);
 
     if (button.attr("disabled") !== "disabled") {
       button.attr("disabled", "disabled");
-      
+
       var form = button.closest("form.build_project");
 
       $.post(form.attr("action"), form.serialize(), function(resp) {

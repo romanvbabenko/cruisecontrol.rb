@@ -29,24 +29,24 @@ module CruiseControl
       end
     end
   end
-  
+
   def self.require_site_config_if_needed
     require self.data_root.join('site_config') if self.data_root.join('site_config.rb').exist?
   end
-  
+
   def self.data_root
     @data_root ||= Pathname.new( ENV['CRUISE_DATA_ROOT'] || File.join(CruiseControl.home_directory, ".cruise") )
   end
-  
+
   class Application < Rails::Application
     # Add additional load paths for your own custom dirs
     config.autoload_paths << Rails.root.join('lib')
     config.autoload_paths << Rails.root.join('lib', 'builder_plugins')
     config.autoload_paths << CruiseControl.data_root.join('builder_plugins')
-    
+
     config.after_initialize do
       require Rails.root.join('config', 'configuration')
-      
+
       # get rid of cached pages between runs
       FileUtils.rm_rf Rails.root.join('public', 'builds')
       FileUtils.rm_rf Rails.root.join('public', 'documentation')
@@ -56,6 +56,9 @@ module CruiseControl
     end
 
     config.action_view.javascript_expansions[:defaults] = ['rails', 'jquery', 'jquery_ujs']
+
+    config.middleware.use Rack::TimeZone
+    config.middleware.use Rack::Locale
   end
 end
 
