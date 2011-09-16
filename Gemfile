@@ -12,6 +12,7 @@ gem "rake", "0.8.7"
 gem "jquery-rails", '1.0.9'
 gem "abstract", "1.0.0"
 gem "rack-contrib", :require => "rack/contrib"
+gem "unicorn", "~> 4.1.1"
 
 group :development do
   gem "rspec-rails", "~> 2.6.1"
