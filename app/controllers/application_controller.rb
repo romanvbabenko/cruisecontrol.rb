@@ -20,5 +20,6 @@ class ApplicationController < ActionController::Base
 
   def set_time_zone
     Time.zone = request.env.fetch('rack.timezone.utc_offset', 0).to_i / 3600
+    logger.debug "#set_time_zone; #{Time.zone.to_s}"
   end
 end
