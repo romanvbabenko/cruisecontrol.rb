@@ -44,6 +44,14 @@ module CruiseControl
     config.autoload_paths << Rails.root.join('lib', 'builder_plugins')
     config.autoload_paths << CruiseControl.data_root.join('builder_plugins')
 
+    config.time_zone = 'UTC'
+    config.i18n.default_locale = :en
+
+    config.action_view.javascript_expansions[:defaults] = ['rails', 'jquery', 'jquery_ujs']
+
+    config.middleware.use Rack::TimeZone
+    config.middleware.use Rack::Locale
+
     config.after_initialize do
       require Rails.root.join('config', 'configuration')
 
@@ -55,10 +63,6 @@ module CruiseControl
       BuilderPlugin.load_all
     end
 
-    config.action_view.javascript_expansions[:defaults] = ['rails', 'jquery', 'jquery_ujs']
-
-    config.middleware.use Rack::TimeZone
-    config.middleware.use Rack::Locale
   end
 end
 
