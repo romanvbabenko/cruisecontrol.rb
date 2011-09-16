@@ -30,4 +30,5 @@ server_jar/target/
 config/ccrb.properties
 pkg
 reports
+Capfile
 config/deploy.rb
