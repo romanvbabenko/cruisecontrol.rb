@@ -16,6 +16,7 @@ cruisecontrol.iws
 *.iws
 *.ipr
 *.iml
+*.log
 .tmtags
 .DS_Store
 tmtags
@@ -32,3 +33,4 @@ pkg
 reports
 Capfile
 config/deploy.rb
+
