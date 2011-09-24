@@ -19,7 +19,6 @@ group :development do
   gem "shoulda", "~> 2.11.3"
 
   gem "rails-footnotes", ">= 3.7.5.rc4"
-  gem "colorize"
 
   #TODO ???
   gem "rcov", '0.9.9'
@@ -27,6 +26,3 @@ group :development do
   gem "rack-test", :require => "rack/test"
 end
 
-platform :jruby do
-  gem 'jruby-openssl'
-end
