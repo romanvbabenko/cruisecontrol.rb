@@ -3,9 +3,9 @@ require 'test/unit/assertions'
 
 module FileSandbox
   VERSION = "0.4"
-  
+
   attr_reader :sandbox
-  
+
   def in_sandbox(&block)
     raise "I expected to create a sandbox as you passed in a block to me" if !block_given?
 
@@ -57,7 +57,7 @@ module FileSandbox
       clean_up
       FileUtils.mkdir_p @root
     end
-    
+
     def [](name)
       SandboxFile.new(File.join(@root, name))
     end
@@ -75,17 +75,17 @@ module FileSandbox
           file.content = (options.delete(:with_content) || options.delete(:with_contents) || '')
         end
       end
-      
+
       raise "unexpected keys '#{options.keys.join(', ')}'" unless options.empty?
-      
+
       dir || file
     end
-    
+
     def remove(options)
       name = File.join(@root, options[:file])
       FileUtils.remove_file name
     end
-    
+
     # usage assert :file=>'my file.rb', :has_contents=>'some stuff'
     def assert(options)
       name = File.join(@root, options[:file])
@@ -106,7 +106,7 @@ module FileSandbox
 
   class SandboxFile
     attr_reader :path
-    
+
     def initialize(path)
       @path = path
     end
@@ -118,12 +118,12 @@ module FileSandbox
     def content
       File.read path
     end
-    
+
     def content=(content)
       FileUtils.mkdir_p File.dirname(@path)
       File.open(@path, "w") {|f| f << content}
     end
-    
+
     def binary_content=(content)
       FileUtils.mkdir_p File.dirname(@path)
       File.open(@path, "wb") {|f| f << content}
@@ -136,6 +136,6 @@ module FileSandbox
     alias exists? exist?
     alias contents content
     alias contents= content=
-    alias binary_contents= binary_content=    
+    alias binary_contents= binary_content=
   end
 end

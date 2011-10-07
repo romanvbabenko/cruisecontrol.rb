@@ -11,7 +11,7 @@ class ProjectsMigrationTest < ActiveSupport::TestCase
   def teardown
     teardown_sandbox
   end
-  
+
   def test_migrate_data_if_needed
     sandbox.new :file => 'data.version', :with_content => '2'
     @migration.expects(:migration_scripts).returns(['001_foo.rb', '002_bar.rb', '003_baz.rb'])

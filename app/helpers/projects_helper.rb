@@ -16,11 +16,11 @@ module ProjectsHelper
 
   def rss_link(project, build)
     build ? build_url(:only_path => false, :project => project, :build => build) :
-            project_without_builds_url(:only_path => false, :project => project)            
+            project_without_builds_url(:only_path => false, :project => project)
   end
 
   def show_revisions_in_build(revisions)
-    return '' if revisions.empty?    
+    return '' if revisions.empty?
     if revisions.length == 1
       revision = revisions[0]
       text = "<div><span class='build_author'>#{revision.author}</span>" + ' committed the checkin</div>'
@@ -34,7 +34,7 @@ module ProjectsHelper
     end
   end
 
-  def revisions_in_build(build)    
+  def revisions_in_build(build)
     changeset = build.changeset
     SourceControl::Subversion::ChangesetLogParser.new.parse_log changeset.split("\n")
   end
@@ -54,7 +54,7 @@ module ProjectsHelper
   # by CCTray.Net
   def map_to_cctray_activity(builder_state)
     case builder_state.to_s
-    when 'checking_for_modifications' then 'CheckingModifications'  
+    when 'checking_for_modifications' then 'CheckingModifications'
     when 'building' then 'Building'
     when 'sleeping', 'builder_down' then 'Sleeping'
     else 'Unknown'

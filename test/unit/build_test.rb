@@ -24,13 +24,13 @@ class BuildTest < ActiveSupport::TestCase
         sandbox.new :directory => "build-1"
         now = Time.now
         Time.stubs(:now).returns(now)
-        
+
         build = Build.new(project, 1)
-        
+
         now += 10.seconds
         Time.stubs(:now).returns(now)
         build.fail!("I tripped")
-        
+
         assert_equal true, build.failed?
         assert_equal "I tripped", build.error
       end
@@ -51,14 +51,14 @@ class BuildTest < ActiveSupport::TestCase
         sandbox.new :file => "build-1/build.log"
         project.stubs(:error_message).returns("fail message")
         project.stubs(:"config_valid?").returns(false)
-        
+
         build = Build.new(project, 1, true)
         build.run
         assert_equal "fail message", File.open("build-1-failed.in0s/error.log"){|f|f.read}
         assert_equal "fail message", build.brief_error
-      end   
+      end
     end
-    
+
     test "should include plugin errors if they exist" do
       with_sandbox_project do |sandbox, project|
         sandbox.new :file => "build-1-success.in0s/error.log"
@@ -74,7 +74,7 @@ class BuildTest < ActiveSupport::TestCase
       with_sandbox_project do |sandbox, project|
         sandbox.new :file => "build-2-success.in9.235s/build.log", :with_content => "some content"
         build = Build.new(project, 2)
-    
+
         assert_equal '2', build.label
         assert_equal true, build.successful?
         assert_equal "some content", build.output
@@ -85,7 +85,7 @@ class BuildTest < ActiveSupport::TestCase
       with_sandbox_project do |sandbox, project|
         sandbox.new :directory => "build-2-failed.in2s"
         build = Build.new(project, 2)
-    
+
         assert_equal '2', build.label
         assert_equal true, build.failed?
       end
@@ -127,7 +127,7 @@ class BuildTest < ActiveSupport::TestCase
         Configuration.stubs(:max_file_display_length).returns nil
         sandbox.new :file => "build-1/build.log", :with_content => "X" * ( 1.kilobyte + 1.byte )
         assert_equal 1.kilobyte + 1.byte, Build.new(project, 1).output.length
-      end      
+      end
     end
   end
 
@@ -156,7 +156,7 @@ class BuildTest < ActiveSupport::TestCase
       assert_equal true, Build.new(stub, 1.kilobytes).exceeds_max_file_display_length?(stub(:exist? => true, :size => 2.kilobytes))
     end
   end
-  
+
   context "#successful?" do
     test "should return true if the underlying filename indicates the build was a success" do
       with_sandbox_project do |sandbox, project|
@@ -180,7 +180,7 @@ class BuildTest < ActiveSupport::TestCase
       with_sandbox_project do |sandbox, project|
         sandbox.new :directory => "build-1-incomplete"
         sandbox.new :directory => "build-2-something_else"
-    
+
         assert Build.new(project, 1).incomplete?
         assert !Build.new(project, 2).incomplete?
       end
@@ -191,10 +191,10 @@ class BuildTest < ActiveSupport::TestCase
     test "should succeed the build given a successful outcome" do
       with_sandbox_project do |sandbox, project|
         expected_build_directory = File.join(sandbox.root, 'build-123')
-    
+
         Time.expects(:now).at_least(2).returns(Time.at(0), Time.at(3.2))
         build = Build.new(project, 123, true)
-    
+
         expected_build_log = File.join(expected_build_directory, 'build.log')
         expected_options = {
             :stdout => expected_build_log,
@@ -212,7 +212,7 @@ class BuildTest < ActiveSupport::TestCase
     test "should store the result of the build in a file" do
       with_sandbox_project do |sandbox, project|
         project.stubs(:config_file_content).returns("cool project settings")
-    
+
         build = Build.new(project, 123, true)
         build.stubs(:execute)
 
@@ -225,10 +225,10 @@ class BuildTest < ActiveSupport::TestCase
     test "should fail the build given a bad outcome (error)" do
       with_sandbox_project do |sandbox, project|
         expected_build_directory = File.join(sandbox.root, 'build-123')
-    
+
         Time.stubs(:now).returns(Time.at(1))
         build = Build.new(project, 123, true)
-    
+
         expected_build_log = File.join(expected_build_directory, 'build.log')
         expected_options = {
           :stdout => expected_build_log,
@@ -246,9 +246,9 @@ class BuildTest < ActiveSupport::TestCase
     test "should warn on a mistaken checkout if trunk dir exists" do
       with_sandbox_project do |sandbox, project|
         sandbox.new :file => "work/trunk/rakefile"
-      
+
         expected_build_directory = File.join(sandbox.root, 'build-123')
-    
+
         build = Build.new(project, 123, true)
 
         expected_build_log = File.join(expected_build_directory, 'build.log')
@@ -257,10 +257,10 @@ class BuildTest < ActiveSupport::TestCase
           :stderr => expected_build_log,
           :env => {}
         }
-    
+
         build.expects(:execute).with(build.rake, expected_options).raises(CommandLine::ExecutionError)
         build.run
-        
+
         log = SandboxFile.new(Dir["build-123-failed.in*s/build.log"].first).content
         assert_match /trunk exists/, log
       end
@@ -272,22 +272,22 @@ class BuildTest < ActiveSupport::TestCase
 
         build.expects(:execute).raises(CommandLine::ExecutionError.new(*%w(a b c d e)))
         build.run
-        
+
         assert_equal "", build.error
       end
     end
-    
+
     test "should pass project environment variables to execute" do
       begin
         cc_db_prefix, ENV["CC_DB_PREFIX"] = ENV["CC_DB_PREFIX"], "test_"
         with_sandbox_project do |sandbox, project|
           project.environment["CC_DB_PREFIX"] = "master_"
-        
+
           expected_build_directory = File.join(sandbox.root, 'build-123')
-    
+
           Time.expects(:now).at_least(2).returns(Time.at(0), Time.at(3.2))
           build = Build.new(project, 123, true)
-    
+
           expected_build_log = File.join(expected_build_directory, 'build.log')
           expected_options = {
               :stdout => expected_build_log,
@@ -342,7 +342,7 @@ class BuildTest < ActiveSupport::TestCase
         assert_nil build_with_custom_script.rake_task
       end
     end
-  end  
+  end
 
   context "#additional_artifacts" do
     test "should include any files left as artifacts in the build directory" do
@@ -380,7 +380,7 @@ class BuildTest < ActiveSupport::TestCase
       end
     end
   end
-  
+
   context "#url" do
     test "should expose a build url based on the dashboard URL in the project configuration" do
       with_sandbox_project do |sandbox, project|
@@ -388,9 +388,9 @@ class BuildTest < ActiveSupport::TestCase
         build = Build.new(project, 1)
 
         dashboard_url = "http://www.my.com"
-        Configuration.expects(:dashboard_url).returns(dashboard_url)      
+        Configuration.expects(:dashboard_url).returns(dashboard_url)
         assert_equal "#{dashboard_url}/builds/#{project.name}/#{build.to_param}", build.url
-      end      
+      end
     end
 
     test "should raise a RuntimeError if the configuration has no dashboard URL" do
@@ -410,13 +410,13 @@ class BuildTest < ActiveSupport::TestCase
         ENV['RAILS_ENV'] = 'craziness'
         with_sandbox_project do |sandbox, project|
           build = Build.new(project, 1)
-        
+
           build.in_clean_environment_on_local_copy do
             assert_equal nil, ENV['RAILS_ENV']
           end
-          
+
           assert_equal 'craziness', ENV['RAILS_ENV']
-        end    
+        end
       ensure
         ENV['RAILS_ENV'] = 'test'
       end
@@ -438,7 +438,7 @@ class BuildTest < ActiveSupport::TestCase
         ENV["BUNDLE_GEMFILE"] = bundle_gemfile
       end
     end
-  end  
+  end
 
   context "#abbreviated_label" do
     test "should shorten labels that are too long, preserving the extension" do
@@ -464,7 +464,7 @@ class BuildTest < ActiveSupport::TestCase
         build_cmd = Build.new(project, "foo").command
         assert_match /ruby -e/, build_cmd
         assert_match /cc_build.rake/, build_cmd
-      end    
+      end
     end
   end
 
@@ -473,7 +473,7 @@ class BuildTest < ActiveSupport::TestCase
       with_sandbox_project do |sandbox, project|
         bundle_cmd = Build.new(project, "foo").bundle_install
         assert_match /check (.*) || (.*) install/, bundle_cmd
-      end        
+      end
     end
 
     test "should use the project's local checkout both for its Gemfile and install location" do
@@ -484,7 +484,7 @@ class BuildTest < ActiveSupport::TestCase
         assert_match /--gemfile=#{project.gemfile}/, bundle_cmd
         assert_match /bundle install/, bundle_cmd
         assert_match /--some-args/, bundle_cmd
-      end    
+      end
     end
   end
 end

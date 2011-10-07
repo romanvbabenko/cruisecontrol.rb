@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class ApplicationHelperTest < ActionView::TestCase
-  
+
   setup do
     @helper = Object.new.extend(ApplicationHelper)
   end
@@ -31,7 +31,7 @@ class ApplicationHelperTest < ActionView::TestCase
       duration_formatter.expects(:general)
       DurationFormatter.expects(:new).with(0).returns(duration_formatter)
       @helper.format_seconds(0)
-    end  
+    end
   end
 
   context "#format_changeset_log" do
@@ -51,7 +51,7 @@ class ApplicationHelperTest < ActionView::TestCase
       @helper.expects(:link_to).with("text", "build_path", {:class => "status", :title => "changeset"})
       @helper.build_link("text", project, build)
     end
-  end  
+  end
 
   context "ApplicationHelper#human_time" do
     test "should include the year when the time occurred before this year" do
@@ -81,5 +81,5 @@ class ApplicationHelperTest < ActionView::TestCase
       assert_equal '2009-07-02 00:00:00 ?future?', @helper.human_time(Time.parse('2009-07-02 00:00:00'))
     end
   end
-  
+
 end

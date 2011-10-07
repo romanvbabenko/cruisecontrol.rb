@@ -2,7 +2,7 @@ require 'test_helper'
 
 class BuilderIntegrationTest < ActiveSupport::TestCase
   include FileSandbox
-  
+
   def test_checkout
     # with_project calls svn.checkout
     with_project 'passing_project' do |project, sandbox|
@@ -50,7 +50,7 @@ class BuilderIntegrationTest < ActiveSupport::TestCase
 
   def test_build_if_necessary_should_update_and_reload_broken_central_config
     with_project('project_with_central_config', :revision => 18) do |project, sandbox|
-      assert_equal "raise 'Error in config file'\n\n", 
+      assert_equal "raise 'Error in config file'\n\n",
                    File.read("#{sandbox.root}/project_with_central_config/work/cruise_config.rb")
       begin
         $config_loaded = false
@@ -216,7 +216,7 @@ db-migrate
 
   def with_project(project_name, options = {}, &block)
     in_sandbox do |sandbox|
-      svn = SourceControl::Subversion.new :repository => "#{fixture_repository_url}/#{project_name}", 
+      svn = SourceControl::Subversion.new :repository => "#{fixture_repository_url}/#{project_name}",
                            :path => "#{project_name}/work"
       svn.checkout options[:revision], StringIO.new
 

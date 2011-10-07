@@ -1,16 +1,16 @@
 #
 # this plugin will publish logs from your project into the build directory after a build finishes
-# by default, it will publish files it finds that match the pattern 
+# by default, it will publish files it finds that match the pattern
 #
 # <pre><code>log/*log</code></pre>
 #
 # but it can be configured to match any number of patterns like this
-# 
+#
 # <pre><code>project.log_publisher.globs = ['log/*.log', 'tmp/*']</code></log>
 #
 class LogPublisher < BuilderPlugin
   attr_accessor :globs
-  
+
   def initialize(project)
     @globs = ["log/*.log"]
     super

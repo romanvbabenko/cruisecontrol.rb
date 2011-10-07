@@ -1,14 +1,14 @@
 require 'rake/tasklib'
 module RailsInAWar
   class JavacTask < Rake::TaskLib
-    
+
     attr_accessor :target
     attr_accessor :source
     attr_accessor :classpath
-    
+
     attr_accessor :src_dir
     attr_accessor :dest_dir
-    
+
     def initialize(name=:javac)
       @name = name
       @target = '1.6'
@@ -18,11 +18,11 @@ module RailsInAWar
       yield self if block_given?
       define
     end
-    
+
     def define
       task @name do
         mkdir_p @dest_dir
-        
+
         return if Dir["#{@src_dir}/**/*.java"].empty?
 
         create_sources_file
@@ -41,7 +41,7 @@ module RailsInAWar
         sh(javac.join(' '))
       end
     end
-    
+
     private
     def create_sources_file
       File.open(sources_file, 'w') do |f|
@@ -54,7 +54,7 @@ module RailsInAWar
         f.puts(@classpath.flatten.sort.join(File::PATH_SEPARATOR))
       end
     end
-    
+
     def create_options_file
       File.open(options_file, 'w') do |f|
         f.puts '-g:lines,vars,source'
@@ -64,7 +64,7 @@ module RailsInAWar
         f.puts '-nowarn'
       end
     end
-    
+
     def tmp_dir
       dir = "#{Rails.root}/tmp"
       mkdir_p dir unless File.exist?(dir)

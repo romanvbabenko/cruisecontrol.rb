@@ -14,23 +14,23 @@
   <%= javascript_include_tag :all %>
 </head>
 <body>
-	<div id="doc" class="yui-t4">
+  <div id="doc" class="yui-t4">
     <%= render :partial => '/documentation/header' %>
 
-		<div id="bd" class="thick">
-		  <div class="yui-b" id="side-bar">
-		    <div class="inner">
+    <div id="bd" class="thick">
+      <div class="yui-b" id="side-bar">
+        <div class="inner">
           <%= raw render :partial => '/documentation/' + (@sidebar || 'sidebar_docs') %>
-		    </div>
+        </div>
       </div>
 
-		  <div id="yui-main">
-		    <div class="yui-b">
-		      <div class="inner">
-		        <%= yield %>
-		      </div>
-		    </div>
-		  </div>
+      <div id="yui-main">
+        <div class="yui-b">
+          <div class="inner">
+            <%= yield %>
+          </div>
+        </div>
+      </div>
     </div>
 
     <%= render :partial => '/documentation/footer' %>

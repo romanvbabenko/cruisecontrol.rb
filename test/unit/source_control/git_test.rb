@@ -54,7 +54,7 @@ class SourceControl::GitTest < ActiveSupport::TestCase
     end
   end
 
-  
+
   def test_initialize_should_remember_repository
     git = Git.new(:repository => "git:/my_repo")
     assert_equal "git:/my_repo", git.repository
@@ -149,7 +149,7 @@ class SourceControl::GitTest < ActiveSupport::TestCase
           ""
         end
       end
-      
+
       begin
         old_timeout = Configuration.git_load_new_changesets_timeout
         Configuration.git_load_new_changesets_timeout = 0.5.seconds
@@ -176,7 +176,7 @@ class SourceControl::GitTest < ActiveSupport::TestCase
           raise BuilderError.new('This is a BuilderError, just reraise it')
         end
       end
-      
+
       assert_raise(BuilderError) do
         begin
           git.latest_revision
@@ -196,7 +196,7 @@ class SourceControl::GitTest < ActiveSupport::TestCase
       assert_equal "b2", git.current_branch
     end
   end
-  
+
   def test_watching_for_changes_in_subdirectory
     git = Git.new(:path => '.', :watch_for_changes_in => "subdir")
     one = SourceControl::Git::Revision.new(:number => 1, :changeset => ["a.txt", "diff/sub/b.txt", "some/subdir/c.txt"])
@@ -204,7 +204,7 @@ class SourceControl::GitTest < ActiveSupport::TestCase
     three = SourceControl::Git::Revision.new(:number => 3, :changeset => ["subdir/a.txt"])
 
     mock_revisions(git, [one, two, three])
-    
+
     revisions = git.new_revisions
     assert_equal [two, three], revisions
     assert_equal ["subdir/b.txt", "subdir/c.txt"], revisions[0].files

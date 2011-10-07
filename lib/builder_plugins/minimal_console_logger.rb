@@ -8,11 +8,11 @@ class MinimalConsoleLogger < BuilderPlugin
   def build_started(build)
     puts "Build #{build.label} started"
   end
-  
+
   def build_finished(build)
     puts "Build #{build.label} " + (build.successful? ? 'finished SUCCESSFULLY' : 'FAILED')
   end
-  
+
   def new_revisions_detected(new_revisions)
     if new_revisions.last.nil?
       puts "Changes detected"
@@ -26,7 +26,7 @@ class MinimalConsoleLogger < BuilderPlugin
     puts "#{error.class}: #{error.message}"
     puts error.backtrace.map { |line| "  #{line}" }.join("\n") rescue nil
   end
-  
+
   def configuration_modified
     puts "Configuration modification detected"
   end

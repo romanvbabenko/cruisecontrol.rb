@@ -16,7 +16,7 @@ Updated external to revision 5875.
 
 Updated to revision 46.
 EOF
-  
+
     def test_can_parse_UPDATE_OUTPUT
       expected_result = [
         ChangesetEntry.new('A  ', 'failing_project'),

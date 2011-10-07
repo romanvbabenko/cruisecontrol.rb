@@ -8,7 +8,7 @@ module SourceControl
         Subversion::Info.new(info['revision'].to_i, info['commit']['revision'].to_i, info['commit']['author'], info['url'])
       end
     end
-    
+
   end
 end
 

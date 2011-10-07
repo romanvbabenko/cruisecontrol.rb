@@ -9,7 +9,7 @@ class BuildLogParser
   RSPEC_FAILURE_REGEX = /^'(.*)' FAILED\n((.+\n)+)/
   RSPEC_STACK_TRACE_REGEX = /^.*:\d+:.*$/
   RSPEC_STACK_TRACE_MAYBE_END_REGEX = /\n\nFinished.*$/
-  
+
   TEST_NAME_REGEX = /\S+/
   MESSAGE_REGEX = /\]\:\n([\s\S]+)/
   STACK_TRACE_REGEX = /\[([\s\S]*?)\]\:/
@@ -24,11 +24,11 @@ class BuildLogParser
 
   def test_errors
     test_errors = []
-    
+
     @log.scan(TEST_ERROR_REGEX) do |match|
       test_errors << TestErrorEntry.create_error($1, $2, $3)
     end
-  
+
     return test_errors
   end
 
@@ -50,7 +50,7 @@ class BuildLogParser
   def failures
     test_failures + rspec_failures
   end
-   
+
   def test_failures
     test_failures = []
 
@@ -70,7 +70,7 @@ class BuildLogParser
 
     test_failures
   end
-  
+
   def rspec_failures
     failures = []
     [@log.split(/\d+\)/)[1..-1]].compact.flatten.each do |issue_content|
@@ -82,7 +82,7 @@ class BuildLogParser
       end
     end
     failures
-  end  
+  end
 
   def failures_and_errors
     failures + errors

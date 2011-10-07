@@ -2,7 +2,7 @@ module CruiseControl
   class Init
     DEFAULT_PORT = 3333
     DEFAULT_ENV  = 'production'
-  
+
     def run
       command = ARGV.shift
       if command.nil?
@@ -16,7 +16,7 @@ module CruiseControl
         exit -1
       end
     end
-    
+
     def method_for_command(command)
       case command
       when 'start'                            then :start
@@ -27,7 +27,7 @@ module CruiseControl
       when 'help', '-h', '--help', '/?', '-?' then :help
       end
     end
-  
+
     def start
       require ENV_PATH
 
@@ -35,7 +35,7 @@ module CruiseControl
         ARGV << '-p'
         ARGV << DEFAULT_PORT.to_s
       end
-      
+
       unless ARGV.include?('-e') || ARGV.include?('--environment')
         ARGV << '-e'
         ARGV << 'production'
@@ -50,11 +50,11 @@ module CruiseControl
         ARGV << '-P'
         ARGV << Rails.root.join('tmp', 'pids', 'server.pid').to_s
       end
-      
+
       require File.join(File.dirname(__FILE__), '..', 'platform')
       Platform.running_as_daemon = ARGV.include?('-d') || ARGV.include?('--daemon')
       require 'rails/commands/server'
-      
+
       Rails::Server.new.tap { |server|
         Dir.chdir(Rails.application.root)
         server.start
@@ -91,14 +91,14 @@ module CruiseControl
     def builder
       load File.join(File.dirname(__FILE__), '..', '..', 'script', 'builder')
     end
-  
+
     def version
       puts <<-EOL
     CruiseControl.rb, version #{CruiseControl::VERSION::STRING}
     Copyright (C) 2011 ThoughtWorks
       EOL
     end
-  
+
     def help
       command = ARGV.shift
 
@@ -128,6 +128,6 @@ For additional information, see http://cruisecontrolrb.thoughtworks.com/
       end
 
     end
-  
+
   end
 end

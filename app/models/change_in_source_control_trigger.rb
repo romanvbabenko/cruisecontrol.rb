@@ -10,7 +10,7 @@ class ChangeInSourceControlTrigger
   def build_necessary?(reasons)
     p = @triggered_project
     p.notify :polling_source_control
-    
+
     if !p.source_control.up_to_date?(reasons)
       p.notify :new_revisions_detected, reasons.select { |r| r.is_a? SourceControl::AbstractRevision }
       return true

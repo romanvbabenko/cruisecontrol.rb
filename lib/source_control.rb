@@ -38,10 +38,10 @@ module SourceControl
       svn = File.directory?(File.join(path, '.svn'))
       hg = File.directory?(File.join(path, '.hg'))
       bzr = File.directory?(File.join(path, '.bzr'))
-      
+
       raise "Could not detect the type of source control in #{path}"       unless [git, svn, hg, bzr].include?(true)
       raise "More than one type of source control was detected in #{path}" if [git, svn, hg, bzr].count(true) > 1
-      
+
       return SourceControl::Git.new(:path => path)          if git
       return SourceControl::Subversion.new(:path => path)   if svn
       return SourceControl::Mercurial.new(:path => path)    if hg

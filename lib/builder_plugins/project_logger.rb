@@ -7,12 +7,12 @@ class ProjectLogger < BuilderPlugin
   def build_started(build)
     CruiseControl::Log.event("Build #{build.label} started")
   end
-  
+
   def build_finished(build)
     message = "Build #{build.label} " + (build.successful? ? 'finished SUCCESSFULLY' : 'FAILED')
     CruiseControl::Log.event(message)
   end
-  
+
   def sleeping
     CruiseControl::Log.event("Sleeping", :debug)
   end
@@ -20,11 +20,11 @@ class ProjectLogger < BuilderPlugin
   def polling_source_control
     CruiseControl::Log.event("Polling source control", :debug)
   end
-  
+
   def no_new_revisions_detected
     CruiseControl::Log.event("No new revisions detected", :debug)
   end
-  
+
   def new_revisions_detected(new_revisions)
     if new_revisions.last.nil?
       CruiseControl::Log.event("Changes detected")

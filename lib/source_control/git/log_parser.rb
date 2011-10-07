@@ -42,7 +42,7 @@ module SourceControl
       end
 
       private
-      
+
       def read_author_and_time(line)
         author, seconds_from_epoch = line.match(/^author (.+) (\d+) [-+]\d{4}$/)[1, 2]
         [author, Time.at(seconds_from_epoch.to_i)]

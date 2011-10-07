@@ -2,7 +2,7 @@ module SourceControl
   class AbstractAdapter
 
     include CommandLine
-    
+
     attr_accessor :path
 
     def checkout(revision = nil, stdout = $stdout)

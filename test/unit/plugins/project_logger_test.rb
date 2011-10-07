@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class ProjectLoggerTest < Test::Unit::TestCase  
+class ProjectLoggerTest < Test::Unit::TestCase
   def setup
     @logger = ProjectLogger.new(nil)
     @mock_build = Object.new
@@ -12,14 +12,14 @@ class ProjectLoggerTest < Test::Unit::TestCase
 
     @logger.build_started(@mock_build)
   end
-  
+
   def test_build_finished_with_success
     @mock_build.expects(:label).returns(123)
     @mock_build.expects(:successful?).returns(true)
     CruiseControl::Log.expects(:event).with("Build 123 finished SUCCESSFULLY")
 
     @logger.build_finished(@mock_build)
-  end  
+  end
 
   def test_build_finished_with_failure
     @mock_build.expects(:label).returns(123)
@@ -27,8 +27,8 @@ class ProjectLoggerTest < Test::Unit::TestCase
     CruiseControl::Log.expects(:event).with("Build 123 FAILED")
 
     @logger.build_finished(@mock_build)
-  end  
-  
+  end
+
   def test_sleeping
     CruiseControl::Log.expects(:event).with("Sleeping", :debug)
     @logger.sleeping
@@ -38,7 +38,7 @@ class ProjectLoggerTest < Test::Unit::TestCase
     CruiseControl::Log.expects(:event).with("Polling source control", :debug)
     @logger.polling_source_control
   end
-  
+
   def test_no_new_revisions_detected
     CruiseControl::Log.expects(:event).with("No new revisions detected", :debug)
     @logger.no_new_revisions_detected
@@ -51,12 +51,12 @@ class ProjectLoggerTest < Test::Unit::TestCase
 
     @logger.new_revisions_detected([@mock_revision])
   end
-  
+
   def test_build_loop_failed
     @mock_error = Object.new
     @mock_error.expects(:message).returns("Blown up")
     @mock_error.expects(:backtrace).returns(["here:10"])
-    
+
     CruiseControl::Log.expects(:event).with("Build loop failed", :debug)
     CruiseControl::Log.expects(:debug).with("Object: Blown up\n  here:10")
 

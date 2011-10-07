@@ -13,7 +13,7 @@ CruiseControl::Application.configure do
   config.consider_all_requests_local = true
   config.action_controller.perform_caching = false
   config.action_view.debug_rjs = true
-  
+
   # Deprecation warnings
   config.active_support.deprecation = :log
 

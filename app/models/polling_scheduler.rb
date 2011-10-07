@@ -22,7 +22,7 @@ class PollingScheduler
       end
     end
   end
-  
+
   def check_build_request_until_next_polling
     time_to_go = Time.now + polling_interval
     while Time.now < time_to_go
@@ -46,7 +46,7 @@ class PollingScheduler
   def polling_interval=(value)
     begin
       value = value.to_i
-    rescue 
+    rescue
       raise "Polling interval value #{value.inspect} could not be converted to a number of seconds"
     end
     raise "Polling interval of #{value} seconds is too small (min. 5 seconds)" if value < 5.seconds
@@ -57,14 +57,14 @@ class PollingScheduler
   def same_error_as_before(error)
     @last_build_loop_error_source and (error.backtrace.first == @last_build_loop_error_source)
   end
-  
+
   def last_logged_less_than_an_hour_ago
     @last_build_loop_error_time and @last_build_loop_error_time >= 1.hour.ago
   end
-  
+
   def log_error(error)
     begin
-      CruiseControl::Log.error(error) 
+      CruiseControl::Log.error(error)
     rescue
       STDERR.puts(error.message)
       STDERR.puts(error.backtrace.map { |l| "  #{l}"}.join("\n"))
@@ -76,5 +76,5 @@ class PollingScheduler
   def clean_last_build_loop_error
     @last_build_loop_error_source = @last_build_loop_error_time = nil
   end
-  
+
 end

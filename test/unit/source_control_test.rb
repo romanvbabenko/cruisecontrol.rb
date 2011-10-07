@@ -9,7 +9,7 @@ class SourceControlTest < Test::Unit::TestCase
         scm = SourceControl.create({:repository => nil})
       end
     end
-  end 
+  end
 
   def test_create_should_default_to_git
     in_sandbox do

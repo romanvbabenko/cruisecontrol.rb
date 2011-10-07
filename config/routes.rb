@@ -1,6 +1,6 @@
 CruiseControl::Application.routes.draw do
   match '/' => 'projects#index', :as => :root
-  
+
   resources :projects, :constraints => { :id => /.*/ } do
     member do
       post :build, :constraints => { :id => /.*/ }
@@ -21,7 +21,7 @@ CruiseControl::Application.routes.draw do
 
   match 'documentation/*path' => 'documentation#get', :as => :document
   match 'documentation' => 'documentation#get', :as => :document_root
-  
+
   match 'XmlStatusReport.aspx' => 'projects#index', :format => 'cctray'
   match 'XmlServerReport.aspx' => 'projects#index', :format => 'cctray'
 

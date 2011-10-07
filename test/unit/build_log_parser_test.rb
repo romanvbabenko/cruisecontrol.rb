@@ -310,7 +310,7 @@ EOF
       failures = BuildLogParser.new(LOG_OUTPUT_WITH_TEST_FAILURE_ON_UNIX).failures
       assert_equal [expected_first_test_failure_on_unix, expected_second_test_failure], failures
     end
-          
+
     test "should correctly parse mocha test failures" do
       failures = BuildLogParser.new(LOG_OUTPUT_WITH_MOCK_TEST_FAILURE).failures
       assert_equal [expected_mock_test_failure], failures

@@ -37,7 +37,7 @@ module SourceControl
        end until !(line = lines.shift) or line.empty?
        revision
       end
-      
+
     end
 
   end

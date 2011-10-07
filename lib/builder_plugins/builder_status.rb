@@ -17,11 +17,11 @@ class BuilderStatus < BuilderPlugin
   def fatal?
     %w(source_control_error timed_out).include?(status)
   end
-  
+
   def error_message
     File.open(existing_status_file){|f| f.read} rescue ""
   end
-  
+
   def build_initiated
     set_status 'building'
   end
@@ -33,15 +33,15 @@ class BuilderStatus < BuilderPlugin
   def sleeping
     set_status 'sleeping' unless status == 'build_requested'
   end
-  
+
   def queued
     set_status 'queued'
   end
-  
+
   def timed_out
     set_status 'timed_out'
   end
-  
+
   def build_requested
     set_status 'build_requested'
   end
@@ -61,12 +61,12 @@ class BuilderStatus < BuilderPlugin
   def builder_down?
     !ProjectBlocker.blocked?(project)
   end
-  
+
   private
   def existing_status_file
     Dir["#{project.path}/builder_status.*"].first
   end
-  
+
   def read_status
     if existing_status_file
       File.basename(existing_status_file)[15..-1]

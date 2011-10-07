@@ -15,7 +15,7 @@ class DocumentationControllerTest < ActionController::TestCase
       assert_response :success
       assert_template 'documentation/docs'
     end
-    
+
     test "should render a 404 if the requested path does not exist" do
       assert_raise ActionView::MissingTemplate do
         get :get, :path => 'bad_request'

@@ -1,7 +1,7 @@
 # this plugin will delete builds that are no longer wanted, configure it by setting
 #
 # Configuration.number_of_builds_to_keep = 20
-# 
+#
 # in site_config.rb
 class BuildReaper < BuilderPlugin
   cattr_accessor :number_of_builds_to_keep
@@ -9,7 +9,7 @@ class BuildReaper < BuilderPlugin
   def build_finished(build)
     delete_all_builds_but BuildReaper.number_of_builds_to_keep
   end
-  
+
   def delete_all_builds_but(number)
     project.builds[0..-(number + 1)].each do |build|
       build.destroy

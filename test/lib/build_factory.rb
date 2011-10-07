@@ -12,11 +12,11 @@ module BuildFactory
   def create_build(label, status = :success)
     @sandbox.new :file => "build-#{label}/build_status.#{status}"
   end
-  
+
   def create_builds(*labels)
     labels.map {|label| create_build(label) }
   end
-  
+
   def the_project
     return @the_project if @the_project
 

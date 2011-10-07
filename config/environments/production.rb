@@ -15,6 +15,6 @@ CruiseControl::Application.configure do
     ProjectsMigration.new.migrate_data_if_needed
     CruiseControl.require_site_config_if_needed
     require Rails.root.join('config', 'dashboard_initialize')
-    BuilderStarter.start_builders 
+    BuilderStarter.start_builders
   end
 end

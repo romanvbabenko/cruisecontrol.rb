@@ -26,18 +26,18 @@ class PollingSchedulerTest < ActiveSupport::TestCase
 
   def test_last_logged_less_than_an_hour_ago
     assert !@scheduler.last_logged_less_than_an_hour_ago
-  
+
     @scheduler.instance_eval("@last_build_loop_error_time = DateTime.new(2005, 1, 1)")
 
     time = DateTime.new(2005, 1, 1)
 
     Time.stubs(:now).returns(time + 1.hour)
     assert @scheduler.last_logged_less_than_an_hour_ago
-    
+
     Time.stubs(:now).returns(time + 1.hour + 1.second)
     assert !@scheduler.last_logged_less_than_an_hour_ago
   end
-  
+
   def test_check_build_request_until_next_polling
     @scheduler.expects(:polling_interval).returns(2.seconds)
     @scheduler.stubs(:build_request_checking_interval).returns(0)
@@ -59,7 +59,7 @@ class PollingSchedulerTest < ActiveSupport::TestCase
     @scheduler.expects(:polling_interval).returns(1.seconds)
     @scheduler.stubs(:build_request_checking_interval).returns(0)
     Time.expects(:now).times(3).returns(Time.at(0), Time.at(0), Time.at(2))
-    
+
     @mock_project.expects(:build_if_requested).times(0)
     @mock_project.expects(:force_build).times(1)
 

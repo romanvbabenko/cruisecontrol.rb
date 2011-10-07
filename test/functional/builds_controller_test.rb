@@ -44,11 +44,11 @@ class BuildsControllerTest < ActionController::TestCase
     test "should include a link to the project's RSS feed" do
       with_sandbox_project do |sandbox, project|
         sandbox.new :file => 'build-1/build_status.pingpong'
-      
+
         Project.expects(:find).with(project.name).returns(project)
         get :show, :project => project.name
         assert_select "link[title='#{project.name} builds'][href=?]", project_path(project, :format => "rss")
-      end    
+      end
     end
   end
 
@@ -127,23 +127,23 @@ class BuildsControllerTest < ActionController::TestCase
         assert_equal 'text/html', @response.headers['Content-Type']
       end
     end
-    
+
     test "should render a directory list if the file is a directory" do
       with_sandbox_project do |sandbox, project|
         create_build 1
         Project.expects(:find).with(project.name).returns(project)
-        
+
         sandbox.new :file => "build-1/dir/foo.txt"
         sandbox.new :file => "build-1/dir/foo.html"
-        
+
         get :artifact, :project => project.name, :build => '1', :path => 'dir'
         assert_response :ok
         assert_select 'table td a', :text => 'dir/foo.txt'
         assert_select 'table td a', :text => 'dir/foo.html'
       end
     end
-      
-    [ 
+
+    [
       [ 'foo.jpg',  'image/jpeg'      ],
       [ 'foo.jpeg', 'image/jpeg'      ],
       [ 'foo.png',  'image/png'       ],
@@ -218,14 +218,14 @@ class BuildsControllerTest < ActionController::TestCase
       with_sandbox_project do |sandbox, project|
         sandbox.new :directory => 'build-1-success'
         sandbox.new :directory => 'build-2'
-      
+
         Project.stubs(:find).with(project.name).returns(project)
 
         assert project.last_build.incomplete?
-        
+
         get :show, :project => project.name, :build => '1'
         assert !assigns(:autorefresh)
-        
+
         get :show, :project => project.name, :build => '2'
         assert assigns(:autorefresh)
       end
@@ -251,7 +251,7 @@ class BuildsControllerTest < ActionController::TestCase
         Project.expects(:find).with(project.name).returns(project)
 
         get :artifact, :project => project.name, :build => '1', :path => "file.txt", :attachment => ""
-        
+
         assert_response :success
         assert_match /attachment/, response.headers['Content-Disposition']
       end

@@ -37,7 +37,7 @@ class ProjectsMigration
 
   def current_data_version
     if File.exists?(data_version_file)
-      File.read(data_version_file).to_i 
+      File.read(data_version_file).to_i
     elsif File.exists?(old_data_version_file)
       File.read(old_data_version_file).to_i
     else
@@ -48,7 +48,7 @@ class ProjectsMigration
   def data_version_file
     File.join(@data_dir, 'data.version')
   end
-  
+
   def old_data_version_file
     Rails.root.join('projects', 'data.version')
   end

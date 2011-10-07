@@ -11,7 +11,7 @@ class DocumentationController < ApplicationController
       render :template => "documentation/#{params[:path]}", :layout => "documentation"
     end
   end
-  
+
   def plugins
     if params.has_key? :name
       @plugin_title = ActiveSupport::Inflector.titleize(params[:name].sub(/\.rb$/, ''))

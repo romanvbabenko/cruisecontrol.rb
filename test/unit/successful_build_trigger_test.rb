@@ -6,16 +6,16 @@ class SuccessfulBuildTriggerTest < Test::Unit::TestCase
 
   def setup
     setup_sandbox
-    
+
     @triggered_project = create_project('triggered_project')
     @triggering_project = create_project('triggering_project')
     Project.stubs(:new).with(:name => 'triggering_project').returns(@triggering_project)
   end
-  
+
   def teardown
     teardown_sandbox
   end
-  
+
   def test_constructor_should_remember_last_successful_build_of_triggering_project
     trigger = SuccessfulBuildTrigger.new(@triggered_project, @triggering_project.name)
     assert_equal :none, trigger.last_successful_build
@@ -32,7 +32,7 @@ class SuccessfulBuildTriggerTest < Test::Unit::TestCase
 
     create_build @triggering_project, '1'
     assert trigger.build_necessary?(reasons = [])
-    assert_equal '1', trigger.last_successful_build.label 
+    assert_equal '1', trigger.last_successful_build.label
 
     assert !trigger.build_necessary?(reasons = [])
     assert_equal '1', trigger.last_successful_build.label

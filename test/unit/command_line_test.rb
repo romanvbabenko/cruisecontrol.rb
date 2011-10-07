@@ -25,7 +25,7 @@ class CommandLineTest < ActiveSupport::TestCase
   def test_should_only_write_command_to_stdout_when_block_specified
     in_total_sandbox do
       CommandLine.execute("echo hello", {:dir => @dir, :stdout => @stdout, :stderr => @stderr}) do |io|
-        
+
         assert_equal("hello", io.read.strip)
       end
       assert_match(/.* echo hello\s*\[output captured and therefore not logged\]/n, File.read(@stdout).strip)
@@ -111,16 +111,16 @@ class CommandLineTest < ActiveSupport::TestCase
   def test_escape_and_concatenate_accepts_non_strings
     assert_equal 'foo 10', CommandLine.escape_and_concatenate(['foo', 10])
   end
-  
+
   def test_full_cmd_should_escape_wierd_characters_for_echoing
     Platform.stubs(:family).returns('linux')
     Platform.stubs(:prompt).returns('prompt>')
 
-    assert_equal "echo prompt> cd\\ some/path\\;\\ ant\\ cruise >> build.log && " + 
-                 "cd some/path; ant cruise >> build.log ", 
+    assert_equal "echo prompt> cd\\ some/path\\;\\ ant\\ cruise >> build.log && " +
+                 "cd some/path; ant cruise >> build.log ",
                  CommandLine.full_cmd("cd some/path; ant cruise", :stdout => "build.log")
-    assert_equal "echo prompt> cd\\ some/path\\ \\&\\&\\ ant\\ cruise >> build.log && " + 
-                 "cd some/path && ant cruise >> build.log ", 
+    assert_equal "echo prompt> cd\\ some/path\\ \\&\\&\\ ant\\ cruise >> build.log && " +
+                 "cd some/path && ant cruise >> build.log ",
                  CommandLine.full_cmd("cd some/path && ant cruise", :stdout => "build.log")
   end
 

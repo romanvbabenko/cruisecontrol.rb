@@ -38,7 +38,7 @@ module SourceControl
     def latest_revision
       pull_new_changesets
       hg_output = hg('log', ['-v', '-r', 'tip'])
-      Mercurial::LogParser.new.parse(hg_output).first 
+      Mercurial::LogParser.new.parse(hg_output).first
     end
 
     def update(revision = nil)

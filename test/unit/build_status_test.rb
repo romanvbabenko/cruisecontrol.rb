@@ -2,20 +2,20 @@ require 'test_helper'
 
 class BuildStatusTest < ActiveSupport::TestCase
   include FileSandbox
-  
+
   def setup
     @status = BuildStatus.new('')
   end
-  
-  def test_should_parse_elapsed_time     
+
+  def test_should_parse_elapsed_time
     assert_equal 10, @status.match_elapsed_time('build-1-success.in10s')
-    assert_equal 760, @status.match_elapsed_time('build-2-failed.in760s')    
+    assert_equal 760, @status.match_elapsed_time('build-2-failed.in760s')
   end
-  
-  def test_should_raise_exception_when_elapsed_time_not_parsable 
+
+  def test_should_raise_exception_when_elapsed_time_not_parsable
     assert_exception_when_parsing_elapsed_time('build_status.failed')
-    assert_exception_when_parsing_elapsed_time('build_status.success')    
-    assert_exception_when_parsing_elapsed_time('build_status.failed?s')              
+    assert_exception_when_parsing_elapsed_time('build_status.success')
+    assert_exception_when_parsing_elapsed_time('build_status.failed?s')
   end
 
   def test_never_built_is_true_when_file_is_missing
@@ -71,11 +71,11 @@ class BuildStatusTest < ActiveSupport::TestCase
     File.expects(:mtime).with("artifacts_directory/build.log").returns(build_log_mtime)
 
     build_dir_mtime = 2.days.since
-    File.expects(:mtime).with("artifacts_directory").returns(build_dir_mtime)    
+    File.expects(:mtime).with("artifacts_directory").returns(build_dir_mtime)
 
     assert_equal build_dir_mtime, BuildStatus.new("artifacts_directory").timestamp
   end
-  
+
   def test_timestamp_returns_build_dir_mtime_if_build_log_not_exist
     build_dir_mtime = Time.now
     File.expects(:mtime).with("artifacts_directory").returns(build_dir_mtime)
@@ -119,7 +119,7 @@ class BuildStatusTest < ActiveSupport::TestCase
     Time.expects(:now).returns(time_with_fractional_seconds)
     assert_equal 10, BuildStatus.new("build-1-incomplete").elapsed_time_in_progress
   end
-  
+
   def test_status_should_be_incomplete_when_full_path_contains_dashes
     path_with_dashes = '/projects/cc-trunk/build-1-incomplete'
     File.stubs(:exist?).with(path_with_dashes).returns(true)
@@ -131,6 +131,6 @@ class BuildStatusTest < ActiveSupport::TestCase
   def assert_exception_when_parsing_elapsed_time(file_name)
     assert_raise_with_message(RuntimeError, "Could not parse elapsed time") do
       @status.match_elapsed_time(file_name)
-    end  
-  end  
+    end
+  end
 end

@@ -5,7 +5,7 @@ class SubversionIntegrationTest < ActiveSupport::TestCase
 
   setup :setup_sandbox
   teardown :teardown_sandbox
-  
+
   def test_checkout
     checkout 'passing_project'
     assert File.exists?("passing_project/passing_test.rb")
@@ -18,11 +18,11 @@ class SubversionIntegrationTest < ActiveSupport::TestCase
     SourceControl::Subversion.new(:path => 'foo', :repository => fixture_repository_url).latest_revision
     assert_raise(Errno::ENOENT) { SourceControl::Subversion.new(:path => 'foo').latest_revision }
   end
-  
+
   def test_up_to_date
     checkout 'passing_project', :revision => 2
 
-    expected_reasons = 
+    expected_reasons =
 "New revision 29 detected
 Revision 29 committed by bguthrie on 2011-03-31 02:03:31
 Updated passing test to use assert_equal instead of assert, which does not work properly under Ruby 1.9.2.
@@ -43,38 +43,38 @@ and one more revision, for good measure
 
   def test_up_to_date_should_return_an_empty_array_for_uptodate_local_copy
     checkout 'passing_project'
-    
+
     assert @svn.up_to_date?(reasons = [], 29)
     assert_equal "", reasons.join("\n")
   end
-  
+
   def xtest_latest_externals_project_is_up_to_date
     checkout 'project_with_externals'
-    
+
     assert @svn.up_to_date?
   end
-  
+
   def xtest_up_to_date_is_false_on_project_with_missing_externals_in_local_copy
     checkout 'project_with_externals'
     FileUtils.rm_rf 'project_with_externals/external_path'
-    
+
     assert_false @svn.up_to_date?
-    
+
     # FIXME This fails because the external SVN repo is hosted on Rubyforge and no longer active. Need a new repo.
     # @svn.update
     # assert @svn.up_to_date?
   end
-  
+
   def xtest_svn_update_makes_up_to_date_true_for_project_with_externals
     checkout 'project_with_externals', :revision => 27
-    
+
     assert_false @svn.up_to_date?
-    
+
     @svn.update
-    
-    assert @svn.up_to_date?    
+
+    assert @svn.up_to_date?
   end
-  
+
   def fixture_repository_url
     repository_path = Rails.root.join("test", "fixtures", "svn-repo")
     urlified_path = repository_path.to_s.sub(/^[a-zA-Z]:/, '').gsub('\\', '/')
@@ -85,7 +85,7 @@ and one more revision, for good measure
     @svn = svn_for(path)
     @svn.checkout options[:revision], io = StringIO.new
   end
-  
+
   def svn_for(path)
     SourceControl::Subversion.new :repository => File.join(fixture_repository_url, path), :path => path
   end

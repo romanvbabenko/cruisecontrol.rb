@@ -47,7 +47,7 @@ class Configuration
     def dashboard_url=(value)
       @dashboard_url = remove_trailing_slash(value)
     end
-    
+
     def sleep_after_build_loop_error
       @sleep_after_build_loop_error
     end
@@ -61,7 +61,7 @@ class Configuration
     def remove_trailing_slash(str)
       str.sub(/\/$/, '')
     end
-   
+
   end
 
 end

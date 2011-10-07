@@ -104,7 +104,7 @@ class SourceControl::SubversionTest < ActiveSupport::TestCase
     svn.checkout(nil, $stdout, "somewhere")
   end
 
-# TODO: rewrite once "SourceControl::AbstractAdapter#execute_with_error_log" is fixed  
+# TODO: rewrite once "SourceControl::AbstractAdapter#execute_with_error_log" is fixed
 #  def test_should_write_error_info_to_log_when_svn_server_not_available
 #    in_sandbox do |sandbox|
 #      sandbox.new :file => "project/work/empty", :with_content => ""

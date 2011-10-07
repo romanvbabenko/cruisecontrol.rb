@@ -2,7 +2,7 @@
 # typically associated with a CI build, such as revision, status, and changeset.
 class Build
   include CommandLine
-  
+
   class ConfigError < StandardError; end
 
   attr_reader :project, :label
@@ -30,7 +30,7 @@ class Build
   def fail!(error = nil)
     build_status.fail!(seconds_since(@start), error)
   end
-  
+
   def run
     build_log = artifact('build.log')
     build_log_path = build_log.expand_path.to_s
@@ -70,13 +70,13 @@ EOF
       end
     end
   end
-  
+
   def brief_error
     return error unless error.blank?
     return "plugin error" unless plugin_errors.empty?
     nil
   end
-  
+
   def destroy
     FileUtils.rm_rf artifacts_directory
   end
@@ -85,7 +85,7 @@ EOF
   def additional_artifacts
     Dir.entries(artifacts_directory).find_all {|artifact| !(artifact =~ IGNORE_ARTIFACTS) }
   end
-  
+
   def status
     build_status.to_s
   end
@@ -117,7 +117,7 @@ EOF
   def output
     @output ||= contents_for_display(build_log)
   end
-  
+
   def project_settings
     @project_settings ||= contents_for_display(artifact('cruise_config.rb'))
   end
@@ -137,21 +137,21 @@ EOF
   def files_in(path)
     Dir["#{artifacts_directory}/#{path}/*"].collect {|f| f.gsub("#{artifacts_directory}/", '') }
   end
-  
+
   def artifacts_directory
     Dir["#{@project.path}/build-#{label}*"].sort.first || File.join(@project.path, "build-#{label}")
   end
-  
+
   def clear_cache
     FileUtils.rm_f Rails.root.join(Rails.root, 'public', 'builds', 'older', "#{@project.name}.html")
   end
-  
+
   def url
     dashboard_url = Configuration.dashboard_url
     raise "Configuration.dashboard_url is not specified" if dashboard_url.nil? || dashboard_url.empty?
     dashboard_url + Rails.application.routes.url_helpers.build_path(:project => project, :build => to_param)
   end
-  
+
   def artifact(path)
     Pathname.new(artifacts_directory).join(path)
   end
@@ -173,13 +173,13 @@ EOF
   def command
     project.build_command or rake
   end
-  
+
   def rake_task
     project.rake_task
   end
 
   def bundle_install
-    [ 
+    [
       bundle("check", "--gemfile=#{project.gemfile}"),
       bundle("install", project.bundler_args)
     ].join(" || ")
@@ -191,14 +191,14 @@ EOF
     # ARGV.clear at the end prevents Test::Unit's AutoRunner from doing anything silly.
     cc_build_path = Rails.root.join('tasks', 'cc_build.rake')
     maybe_trace   = CruiseControl::Log.verbose? ? " << '--trace'" : ""
-    
+
     if project.uses_bundler?
       %{BUNDLE_GEMFILE=#{project.gemfile} #{Platform.bundle_cmd} exec rake -e "load '#{cc_build_path}'; ARGV << '--nosearch'#{maybe_trace} << 'cc:build'; Rake.application.run; ARGV.clear"}
-    else  
+    else
       %{#{Platform.interpreter} -e "require 'rubygems' rescue nil; require 'rake'; load '#{cc_build_path}'; ARGV << '--nosearch'#{maybe_trace} << 'cc:build'; Rake.application.run; ARGV.clear"}
     end
   end
-  
+
   def in_clean_environment_on_local_copy(&block)
     old_rails_env = ENV['RAILS_ENV']
     old_bundle_gemfile = ENV['BUNDLE_GEMFILE']
@@ -233,7 +233,7 @@ EOF
   def to_param
     self.label
   end
-  
+
   def elapsed_time
     build_status.elapsed_time
   end
@@ -252,7 +252,7 @@ EOF
   end
 
   private
-    
+
     def bundle(*args)
       ( [ "BUNDLE_GEMFILE=#{project.gemfile}", Platform.bundle_cmd ] + args.flatten ).join(" ")
     end

@@ -77,7 +77,7 @@ module CommandLine
 
   def e(cmd, options, &proc)
     full_cmd = full_cmd(cmd, options, &proc)
-    
+
     options[:env].each{|k,v| ENV[k]=v}
     begin
       CruiseControl::Log.debug "#{Platform.prompt} #{format_for_printing(cmd)}" if options[:stdout].nil?
@@ -172,7 +172,7 @@ module CommandLine
     [stdout_opt, stderr_opt]
   end
   module_function :redirects
-  
+
   def escape_and_concatenate(cmd)
     if cmd.is_a?(String)
       escape(cmd)
@@ -184,11 +184,11 @@ module CommandLine
 
   def escape(item)
     item = item.to_s
-    
+
     if Platform.family == 'mswin32'
       escaped_characters = /\\|&|\||>|<|\^/
       escape_symbol = '^'
-      quote_argument = (item =~ /\s/) 
+      quote_argument = (item =~ /\s/)
     else
       escaped_characters = /"|'|<|>| |&|\||\(|\)|\\|;/
       escape_symbol = '\\'

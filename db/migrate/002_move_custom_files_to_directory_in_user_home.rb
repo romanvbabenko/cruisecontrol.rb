@@ -29,8 +29,8 @@ unless plugins.empty?
   raise "We just created a data directory at #{DATA_ROOT}.  Any builder plugins in addition to the ones in
 #{RAILS_ROOT}/lib/builder_plugins need to be moved from
 
-#{RAILS_ROOT}/builder_plugins 
-to 
+#{RAILS_ROOT}/builder_plugins
+to
 #{DATA_ROOT}/builder_plugins
 
 then remove the builder_plugins/ directory (it currently contains #{plugins.inspect})"

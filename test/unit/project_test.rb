@@ -71,7 +71,7 @@ class ProjectTest < ActiveSupport::TestCase
       end
     end
   end
-  
+
   context "#builds" do
     test "should return empty array when project has no builds" do
       in_sandbox do |sandbox|
@@ -93,7 +93,7 @@ class ProjectTest < ActiveSupport::TestCase
 
         build.stubs(:artifacts_directory).returns(sandbox.root)
         build.stubs(:successful?).returns(true)
-        
+
         @project.stubs(:builds).returns([])
         @project.stubs(:config_modified?).returns(false)
         @svn.stubs(:latest_revision).returns(revision)
@@ -143,7 +143,7 @@ class ProjectTest < ActiveSupport::TestCase
         @project.path = sandbox.root
 
         @project.expects(:builds).returns([])
-        error = StandardError.new   
+        error = StandardError.new
         @svn.expects(:latest_revision).raises(error)
 
         # event expectations
@@ -163,7 +163,7 @@ class ProjectTest < ActiveSupport::TestCase
         revision = new_revision(2)
         build = new_mock_build('2')
         @project.stubs(:last_build).returns(nil)
-        build.stubs(:artifacts_directory).returns(sandbox.root)      
+        build.stubs(:artifacts_directory).returns(sandbox.root)
         build.stubs(:successful?).returns(true)
         @svn.stubs(:up_to_date?).with([]).returns(false)
         @svn.expects(:update).with(revision)
@@ -200,7 +200,7 @@ class ProjectTest < ActiveSupport::TestCase
         assert_raise_with_message(StandardError, "something bad happened") do
           @project.build(new_revision(5))
         end
-        
+
         build = @project.builds.first
         assert build.failed?
         assert_equal "something bad happened", build.error
@@ -219,7 +219,7 @@ class ProjectTest < ActiveSupport::TestCase
         new_build.stubs(:successful?).returns(false)
         new_build.stubs(:failed?).returns(true)
         new_build.expects(:run)
-        
+
         @project.expects(:last_build).returns(successful_build)
         @project.stubs(:builds).returns([successful_build])
         @project.stubs(:log_changeset)
@@ -249,14 +249,14 @@ class ProjectTest < ActiveSupport::TestCase
           true
         end
 
-        FileUtils.mkdir_p 'build-1-success.in40s' 
+        FileUtils.mkdir_p 'build-1-success.in40s'
         mock_build = Object.new
         Build.stubs(:new).returns(mock_build)
         mock_build.stubs(:label).returns("1")
         mock_build.expects(:artifacts_directory).returns('build-1-success.in40s')
         mock_build.expects(:abort)
         @project.stubs(:new_revisions).returns(nil)
-        
+
         listener = Object.new
         listener.expects(:configuration_modified)
         @project.add_plugin listener
@@ -268,7 +268,7 @@ class ProjectTest < ActiveSupport::TestCase
     test "should generate an event if the build is fixed" do
       in_sandbox do |sandbox|
         @project.path = sandbox.root
-        
+
         failing_build = stub_build(1)
         failing_build.stubs(:successful?).returns(false)
         failing_build.stubs(:failed?).returns(true)
@@ -361,25 +361,25 @@ class ProjectTest < ActiveSupport::TestCase
 
   context "#build_if_requested" do
     test "should build if build_requested file exists" do
-      in_sandbox do |sandbox|      
+      in_sandbox do |sandbox|
         @project.path = sandbox.root
         revision = @project.source_control.add_revision :message => "A super special feature", :number => 1
-        
+
         sandbox.new :file => 'build_requested'
         @project.stubs(:remove_build_requested_flag_file)
         @project.expects(:build).with(revision, ['Build was manually requested.', '1: A super special feature'])
         @project.build_if_requested
       end
     end
-    
+
     test "should specify build requested reason" do
-      in_sandbox do |sandbox|      
+      in_sandbox do |sandbox|
         @project.path = sandbox.root
         sandbox.new :file => 'build_requested'
         @project.expects(:remove_build_requested_flag_file)
         @project.expects(:build)
         @project.build_if_requested
-      end    
+      end
     end
 
     test "should allow you to request a build" do
@@ -393,7 +393,7 @@ class ProjectTest < ActiveSupport::TestCase
     test "should log a plugin error if a plugin fails" do
       in_sandbox do |sandbox|
         @project.path = sandbox.root
-        
+
         mock_build = Object.new
         mock_build.stubs(:artifacts_directory).returns(sandbox.root)
         mock_build.stubs(:label).returns("1")
@@ -429,16 +429,16 @@ class ProjectTest < ActiveSupport::TestCase
         assert_raise_with_message(RuntimeError, 'Error in plugin Object: Listener failed with :foo') do
           @project.notify(:doing_something, :foo)
         end
-      end      
+      end
     end
 
     test "should handle a plugin error" do
       BuilderPlugin.expects(:known_event?).with(:hey_you).returns true
       plugin = Object.new
       @project.plugins << plugin
-      
+
       plugin.expects(:hey_you).raises("Plugin talking")
-      
+
       assert_raise_with_message(RuntimeError, "Error in plugin Object: Plugin talking") do
         @project.notify(:hey_you)
       end
@@ -448,9 +448,9 @@ class ProjectTest < ActiveSupport::TestCase
       BuilderPlugin.stubs(:known_event?).with(:hey_you).returns true
       plugin1 = Object.new
       plugin2 = Object.new
-      
+
       @project.plugins << plugin1 << plugin2
-      
+
       plugin1.expects(:hey_you).raises("Plugin 1 talking")
       plugin2.expects(:hey_you).raises("Plugin 2 talking")
 
@@ -481,15 +481,15 @@ class ProjectTest < ActiveSupport::TestCase
       end
     end
   end
-  
+
   context "#request_build" do
     test "should start the builder if the builder was down" do
       in_sandbox do |sandbox|
-        @project.path = sandbox.root                        
+        @project.path = sandbox.root
         @project.expects(:builder_state_and_activity).times(2).returns('builder_down', 'sleeping')
         BuilderStarter.expects(:begin_builder).with(@project.name)
         @project.request_build
-      end       
+      end
     end
 
     test "should generate a build_requested file and notify listeners" do
@@ -505,7 +505,7 @@ class ProjectTest < ActiveSupport::TestCase
         assert File.file?(@project.build_requested_flag_file)
       end
     end
-    
+
     test "should not notify listeners when a build requested flag is already set" do
       @project.stubs(:builder_state_and_activity).returns('building')
       in_sandbox do |sandbox|
@@ -514,7 +514,7 @@ class ProjectTest < ActiveSupport::TestCase
 
         listener = Object.new
         listener.expects(:build_requested).never
-        
+
         @project.expects(:build_requested?).returns(true)
         @project.expects(:create_build_requested_flag_file).never
 
@@ -532,22 +532,22 @@ class ProjectTest < ActiveSupport::TestCase
       end
     end
   end
-  
+
   context "#force_build" do
     test "should be able to force a build on demand" do
-      in_sandbox do |sandbox|      
+      in_sandbox do |sandbox|
         @project.path = sandbox.root
         revision = @project.source_control.add_revision :message => "A super special feature", :number => 1
         @project.expects(:build).with(revision, ['Custom message.', '1: A super special feature'])
         @project.force_build('Custom message.')
-      end    
+      end
     end
   end
 
   context "#load_config" do
     test "should attempt to load the configuration from work directory and then root directory" do
       in_sandbox do |sandbox|
-        @project.path = sandbox.root 
+        @project.path = sandbox.root
         begin
           sandbox.new :file => 'work/cruise_config.rb', :with_contents => '$foobar=42; $barfoo = 12345'
           sandbox.new :file => 'cruise_config.rb', :with_contents => '$barfoo = 54321'
@@ -559,11 +559,11 @@ class ProjectTest < ActiveSupport::TestCase
         end
       end
     end
-    
+
     test "should mark the config invalid if an exception is raised during load_config" do
       in_sandbox do |sandbox|
         invalid_ruby_code = 'class Invalid'
-        @project.path = sandbox.root 
+        @project.path = sandbox.root
         sandbox.new :file => 'work/cruise_config.rb', :with_contents => invalid_ruby_code
         @project.load_config
         assert @project.settings.empty?
@@ -572,10 +572,10 @@ class ProjectTest < ActiveSupport::TestCase
         assert_match /Could not load project configuration:/, @project.error_message
       end
     end
-    
+
     test "should remember previous configuration settings" do
       in_sandbox do |sandbox|
-        @project.path = sandbox.root 
+        @project.path = sandbox.root
         sandbox.new :file => 'work/cruise_config.rb', :with_contents => 'good = 4'
         sandbox.new :file => 'cruise_config.rb', :with_contents => 'time = 5'
 
@@ -586,7 +586,7 @@ class ProjectTest < ActiveSupport::TestCase
       end
     end
   end
-  
+
   context "#last_complete_build_status" do
     test "should be 'failed' if builder status is fatal" do
       builder_status = Object.new
@@ -594,8 +594,8 @@ class ProjectTest < ActiveSupport::TestCase
       BuilderStatus.expects(:new).with(@project).returns(builder_status)
       assert_equal "failed", @project.last_complete_build_status
     end
-  end   
-  
+  end
+
   context "#find_build" do
     test "should be able to get a previous build" do
       in_sandbox do |sandbox|
@@ -603,34 +603,34 @@ class ProjectTest < ActiveSupport::TestCase
         sandbox.new :directory => "build-1-success/"
         sandbox.new :directory => "build-2-failure/"
         sandbox.new :directory => "build-3"
-        
+
         build = @project.find_build('2')
         assert_equal('1', @project.previous_build(build).label)
-        
+
         build = @project.find_build('1')
         assert_equal(nil, @project.previous_build(build))
       end
     end
-    
+
     test "should be able to get the next build" do
       in_sandbox do |sandbox|
         @project.path = sandbox.root
         sandbox.new :directory => "build-1-success.in1s/"
         sandbox.new :directory => "build-2-failure.in1s/"
         sandbox.new :directory => "build-3/"
-        
+
         build = @project.find_build('1')
         assert_equal('2', @project.next_build(build).label)
-        
+
         build = @project.find_build('2')
         assert_equal('3', @project.next_build(build).label)
-        
+
         build = @project.find_build('3')
         assert_equal(nil, @project.next_build(build))
       end
     end
   end
-  
+
   context "#last_builds" do
     test "should be able to retrieve the last n builds" do
       in_sandbox do |sandbox|
@@ -638,7 +638,7 @@ class ProjectTest < ActiveSupport::TestCase
         sandbox.new :directory => "build-1-success.in1s/"
         sandbox.new :directory => "build-2-failure.in1s/"
         sandbox.new :directory => "build-3/"
-        
+
         assert_equal 2, @project.last_builds(2).length
         assert_equal 3, @project.last_builds(5).length
       end
@@ -650,20 +650,20 @@ class ProjectTest < ActiveSupport::TestCase
       in_sandbox do |sandbox|
         @project.path = sandbox.root
         marker = sandbox.root + '/last_clean_checkout_timestamp'
-        
+
         now = Time.now
         Time.stubs(:now).returns(now)
 
         @project.do_clean_checkout :every => 1.hour
-      
+
         assert @project.do_clean_checkout?
         assert !@project.do_clean_checkout?
         assert !@project.do_clean_checkout?
-        
+
         now += 59.minutes
         Time.stubs(:now).returns(now)
         assert !@project.do_clean_checkout?
-        
+
         now += 2.minutes
         Time.stubs(:now).returns(now)
         assert @project.do_clean_checkout?
@@ -685,9 +685,9 @@ class ProjectTest < ActiveSupport::TestCase
         @project.path = sandbox.root
 
         assert !@project.do_clean_checkout?, "by default should be off"
-        
+
         @project.do_clean_checkout
-        
+
         assert @project.do_clean_checkout?
         assert @project.do_clean_checkout?
       end
@@ -736,15 +736,15 @@ class ProjectTest < ActiveSupport::TestCase
       @project.path = "foo"
       assert_equal(File.expand_path("foo/work"), @svn.path)
     end
-  end  
-  
+  end
+
   context "#add_plugin" do
     test "should be able to access a plugin by its name after adding it" do
       plugin = BuildReaper.new(@project)
       @project.add_plugin plugin
       assert_equal plugin, @project.build_reaper
     end
-    
+
     test "should raise an exception if already configured" do
       assert_raise RuntimeError do
         @project.add_plugin BuildReaper.new(@project)
@@ -752,13 +752,13 @@ class ProjectTest < ActiveSupport::TestCase
       end
     end
   end
-  
+
   context ".all" do
     test "should return all existing projects" do
       svn = FakeSourceControl.new("bob")
       one = Project.new(:name => "one", :scm => @svn)
       two = Project.new(:name => "two", :scm => @svn)
-      
+
       in_sandbox do |sandbox|
         sandbox.new :file => "one/cruise_config.rb", :with_content => ""
         sandbox.new :file => "two/cruise_config.rb", :with_content => ""
@@ -770,21 +770,21 @@ class ProjectTest < ActiveSupport::TestCase
       svn = FakeSourceControl.new("bob")
       one = Project.new(:name => "one", :scm => @svn)
       two = Project.new(:name => "two", :scm => @svn)
-      
+
       in_sandbox do |sandbox|
         sandbox.new :file => "one/cruise_config.rb", :with_content => ""
         sandbox.new :file => "two/cruise_config.rb", :with_content => ""
         old_projects = Project.all(sandbox.root)
-        
+
         sandbox.new :file => "three/cruise_config.rb", :with_content => ""
         current_projects = Project.all(sandbox.root)
-        
+
         assert_not_equal old_projects, current_projects
         assert_not_same old_projects.first, current_projects.first
       end
     end
   end
-  
+
   context ".load_project" do
     test "should load the project in the given directory" do
       in_sandbox do |sandbox|
@@ -810,7 +810,7 @@ class ProjectTest < ActiveSupport::TestCase
       end
     end
   end
-  
+
   context ".create" do
     test "should add a new project" do
       in_sandbox do |sandbox|
@@ -835,7 +835,7 @@ class ProjectTest < ActiveSupport::TestCase
         assert_raise RuntimeError, 'svn error' do
           Project.create "one", @svn, sandbox.root
         end
-        
+
         assert_false SandboxFile.new('one/work').exists?
         assert_false SandboxFile.new('one').exists?
       end
@@ -899,12 +899,12 @@ class ProjectTest < ActiveSupport::TestCase
   end
 
   private
-  
+
     def stub_build(label)
       stub(
-        :label => label, 
-        :artifacts_directory => "project1/build-#{label}", 
-        :successful? => true, 
+        :label => label,
+        :artifacts_directory => "project1/build-#{label}",
+        :successful? => true,
         :run => nil
       )
     end

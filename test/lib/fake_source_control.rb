@@ -19,14 +19,14 @@ class FakeSourceControl < SourceControl::AbstractAdapter
   def creates_ordered_build_labels?
     true
   end
-  
+
   def add_revision(opts={})
     @latest_revision = FakeRevision.new(opts)
   end
-  
+
   class FakeRevision < SourceControl::AbstractRevision
     attr_reader :message, :number, :time, :author, :files
-    
+
     def initialize(opts={})
       @number  = opts[:number]
       @message = opts[:message]
@@ -34,9 +34,9 @@ class FakeSourceControl < SourceControl::AbstractAdapter
       @author  = "gthreepwood@monkeyisland.gov"
       @files   = []
     end
-    
+
     def ==(other); true; end
-  
+
     def to_s
       "#{number}: #{message}"
     end

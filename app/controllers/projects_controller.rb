@@ -3,7 +3,7 @@ class ProjectsController < ApplicationController
 
   def index
     @projects = Project.all
-    
+
     respond_to do |format|
       format.html do
         if request.xhr?
@@ -47,7 +47,7 @@ class ProjectsController < ApplicationController
 
     @project.request_build rescue nil
 
-    respond_to do |format| 
+    respond_to do |format|
       format.html do
         if request.xhr?
           render_projects_partial(Project.all)
@@ -78,13 +78,13 @@ class ProjectsController < ApplicationController
     end
 
     @project = Project.find(params[:id])
-    render :text => "Project #{params[:id].inspect} not found", :status => 404 and return unless @project 
+    render :text => "Project #{params[:id].inspect} not found", :status => 404 and return unless @project
 
     path = File.join(@project.path, 'work', params[:path])
     @line = params[:line].to_i if params[:line]
 
     if File.directory?(path)
-      render :text => 'Viewing of source directories is not supported yet', :status => 500 
+      render :text => 'Viewing of source directories is not supported yet', :status => 500
     elsif File.file?(path)
       @content = File.read(path)
     else
@@ -102,7 +102,7 @@ class ProjectsController < ApplicationController
         render :partial => 'project', :collection => projects
       end
     end
-    
+
     def project_to_attributes(project)
       { 'name' => project.name }
     end

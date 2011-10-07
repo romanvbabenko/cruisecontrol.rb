@@ -2,22 +2,22 @@ require 'test_helper'
 
 class BuilderStarterTest < ActiveSupport::TestCase
   include FileSandbox
-  
+
   def setup
     @svn = FakeSourceControl.new("bob")
     @one = Project.new(:name => "one", :scm => @svn)
     @two = Project.new(:name => "two", :scm => @svn)
   end
-  
+
   def test_start_builders_should_begin_builder_for_each_project
     Project.expects(:all).returns([@one, @two])
-    
+
     BuilderStarter.expects(:begin_builder).with(@one.name)
     BuilderStarter.expects(:begin_builder).with(@two.name)
-    
+
     BuilderStarter.start_builders
   end
-  
+
   def test_should_use_platform_specific_executable
     Platform.stubs(:family).returns("mswin32")
     Platform.stubs(:interpreter).returns("ruby")

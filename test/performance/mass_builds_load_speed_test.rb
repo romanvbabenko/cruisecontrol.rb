@@ -8,15 +8,15 @@ class MassBuildsLoadSpeedTest < ActionController::IntegrationTest
   def test_load_project_with_many_builds
     projects_root = "#{RAILS_ROOT}/projects"
     mkdir projects_root unless File.exist?(projects_root)
-    
+
     project_root = "#{projects_root}/performance_test"
-    
+
     unless File.exist?(project_root)
       p "create files for performance test"
       mkdir project_root
       mkdir "#{project_root}/work"
       touch "#{project_root}/builder_status.sleeping"
-      
+
       (1..3000).each do |i|
         build_dir = "#{project_root}/build-#{i}-failed.in9s"
         cp_r File.dirname(__FILE__) + "/build-sample", project_root
@@ -25,8 +25,8 @@ class MassBuildsLoadSpeedTest < ActionController::IntegrationTest
     end
 
     log_time("START TEST")
-    
-#    it takes about 1 seconds to display dashboard. looks fine.    
+
+#    it takes about 1 seconds to display dashboard. looks fine.
     get "/projects"
     log_time("DASHBOARD DISPLAYED")
 
@@ -36,13 +36,13 @@ class MassBuildsLoadSpeedTest < ActionController::IntegrationTest
 #    it takes about 1 seconds to display builds default page. looks fine too.
     get "/builds/performance_test"
     log_time("builds DEFAULT PAGE DISPLAYED")
-  end  
-  
+  end
+
   private
   def log_time(message = "LOG")
     p "== #{message} == : " + Time.now.to_s(:human)
   end
-  
+
   def log_to_file(filename, message)
     File.open(filename, "w+"){|f|f.write(message)}
   end

@@ -26,7 +26,7 @@ module SourceControl
 
       if @branch and @branch != current_branch
         git('branch', ['--track', @branch, "origin/#{@branch}"])
-        git('checkout', ['-q', @branch]) # git prints 'Switched to branch "branch"' to stderr unless you pass -q 
+        git('checkout', ['-q', @branch]) # git prints 'Switched to branch "branch"' to stderr unless you pass -q
       end
       git("reset", ['--hard', revision.number]) if revision
     end
@@ -79,7 +79,7 @@ module SourceControl
     end
 
     protected
-    
+
     def filter_revisions_by_subdirectory(revisions, subdir)
       revisions.find_all do |revision|
         if revision.changeset
@@ -96,7 +96,7 @@ module SourceControl
     def load_new_changesets_from_origin
       # NOTE: Git network problems may cause CruiseControl.rb to hang unless you install the system_timer gem.
       # See: https://cruisecontrolrb.lighthouseapp.com/projects/9150-cruise-control-rb/tickets/229-sometimes-git-hangs
-      
+
       MyTimer.timeout(Configuration.git_load_new_changesets_timeout.to_f) do
         git("fetch", ["origin"])
       end
@@ -111,9 +111,9 @@ module SourceControl
 
       execute_in_local_copy(command, options, &block)
     end
-    
+
     private
-    
+
     def git_update_submodule
       git("submodule", ["init"])
       git("submodule", ["update"])

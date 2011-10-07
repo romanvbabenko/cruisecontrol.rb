@@ -104,7 +104,7 @@ module SourceControl
     end
 
     attr_writer :repository
-    
+
     private
 
     def revisions_since(revision_number)
