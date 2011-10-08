@@ -96,4 +96,10 @@ module Platform
   end
   module_function :safely_exec
 
+  def pid_ok?(pid)
+    Process.kill(0, pid.to_i) == 1
+    rescue
+      false
+  end
+  module_function :pid_ok?
 end
