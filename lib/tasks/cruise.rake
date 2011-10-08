@@ -31,20 +31,12 @@ namespace :cruise do
 
   desc "Kill all builders"
   task :'builder:kill_them_all' => :environment do
-    Project.all.each do |project|
-      pid_file = Platform.project_pid_file(project.name)
-      if pid_file.exist?
-        if Platform.pid_ok?(pid_file.read.chomp)
-          Platform.kill_project_builder(project.name) if Platform.pid_ok?(pid_file.read.chomp)
-          puts "#{project.display_name} builder has been killed"
-        else
-          puts "Kill process #{pid_file.basename} has been FAILED"
-        end
-      end
-    end
+    BuilderMan.kill_them_all
   end
 end
 
-
 desc 'Continuous build target'
 task :cruise => ['cruise:all']
+
+desc "Krush, Kill 'n' Destroy all builders"
+task :'cc:kknd' => :'cruise:builder:kill_them_all'
