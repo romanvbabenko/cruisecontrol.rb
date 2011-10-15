@@ -1,6 +1,6 @@
 source "http://rubygems.org"
 
-gem "rails", "3.0.7"
+gem "rails", "~> 3.0.7"
 gem "tzinfo", "0.3.27"
 gem "rack", "1.2.3"
 
@@ -17,7 +17,7 @@ group :development do
   gem "rspec-rails", "~> 2.6.1"
   gem "shoulda", "~> 2.11.3"
 
-  gem "rails-footnotes", ">= 3.7.5.rc4"
+  gem "rails-footnotes", ">= 3.7.5"
 
   #TODO ???
   gem "rcov", '0.9.9'
